@@ -9,7 +9,7 @@
 3. .X  id选择器：选择id值为X的元素，兼容性：IE6+
 4. .X 类选择器： 选择class包含X的元素，兼容性：IE6+
 5. X Y后代选择器： 选择满足X选择器的后代节点中满足Y选择器的元素，兼容性：IE6+
-6. :link，：visited，：focus，：hover，：active链接状态： 选择特定状态的链接元 素，顺序LoVe HAte，兼容性: IE4+
+6. :link，:visited，:focus，:hover，:active链接状态： 选择特定状态的链接元 素，顺序LoVe HAte，兼容性: IE4+
 7. X + Y直接兄弟选择器：在X之后第一个兄弟节点中选择满足Y选择器的元素，兼容性： IE7+
 8. X > Y子选择器： 选择X的子元素中满足Y选择器的元素，兼容性： IE7+
 9. X ~ Y兄弟： 选择X之后所有兄弟节点中满足Y选择器的元素，兼容性： IE7+
@@ -49,6 +49,8 @@ CSS：
 2.position属性 
 ​     一切皆为框
 ​          行框：由一行形成的水平框（Line Box）
+
+​          块框：元素显示为一块内容（block Box）
 
 ​     position 属性值：
 

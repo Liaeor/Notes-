@@ -208,7 +208,7 @@ var func = bar.bind(foo).bind(sed).bind(fiv);
 func(); // ?
 ```
 
-答案是，两次都仍将输出3，而非期待中的4和5，在javascript中，对此bind()是无效的的。更深层次的原因，bind()的实现，相当于使用函数内部包含一个call/apply，第二次bind()相当于在保住一次bind()，所以第二次以后的bind()是无法生效的。
+答案是，两次都仍将输出3，而非期待中的4和5，在javascript中，对此bind()是无效的的。更深层次的原因，bind()的实现，相当于使用函数内部包了一个call/apply，第二次bind()相当于再包住第一次bind()，所以第二次以后的bind()是无法生效的。
 
 ## apply()、call()、bind()比较
 

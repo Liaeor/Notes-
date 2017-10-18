@@ -6,6 +6,8 @@
 
 ​       这句话我很赞同，我想这也是万千编程爱好者，乃至各方面学习爱好者应该抱有的学习态度。因此，这也将鼓励着我们每个人坚持学习，热爱学习，一步一步迈向那个“梦想的国度”！
 
+
+
 ##一、js  typeof操作符返回哪些数据类型？
 
 首先，javascript包括 基本数据类型 和引用类型
@@ -240,19 +242,26 @@
 ## 十、函数内部arguments变量有哪些特性,有哪些属性,如何将它转换为数组
 
 - arguments所有函数中都包含的一个局部变量，是一个**类数组对象**，对应函数调用时的实参。如果函数定义同名参数会在调用时覆盖默认对象
+
 - arguments[index]分别对应函数调用时的实参，并且通过arguments修改实参时会同时修改实参
+
 - arguments.length为实参的个数（Function.length表示形参长度）
+
 - **arguments.callee**为当前正在执行的函数本身，使用这个属性进行递归调用时需注意this的变化
+
 - arguments.caller为调用当前函数的函数（已被遗弃）
-- 转换为数组：`var args = Array.prototype.slice.call(arguments, 0);`
 
+- 转换为数组：
 
+  `var args = Array.prototype.slice.call(arguments, 0);`
+
+  `var args = [...arguments] `
 
 
 
 ##十一、什么是闭包,闭包有什么用
 
-​      **闭包是在某个作用域内定义的函数，它可以访问这个作用域内的所有变量**（简单理解为函数+函数可以访问的自由变量）。
+​      **闭包是在某个作用域内定义的函数，它可以访问这个作用域内的所有变量**（有权访问另一个函数作用域中的变量的函数）。
 
 例：
 
@@ -347,9 +356,9 @@ if (typeof(result) == "object"){
 
 ​                     1.初始化XMLHttpRequest（XHR）对象，也就是创建一个异步调用对象
 
-​                     2.创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息
+​                     2.设置响应HTTP请求状态变化的函数（确保跨浏览器兼容性）
 
-​                     3.设置响应HTTP请求状态变化的函数
+​                     3.创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息
 
 ​                     4.发送HTTP请求
 
@@ -360,10 +369,10 @@ if (typeof(result) == "object"){
 ```javascript
 //创建XHR对象
 var xhr = new XMLHttpRequest(); 
+//设置响应HTTP请求状态变化的函数（必须在调用open()之前指定onreadystatechange 事件处理程序才能确保跨浏览器兼容性，否则将无法接收readyState属性为0和1的情况；）
+xhr.onreadystatechange = function(){}
 //创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息 ,async：true（异步）或 false（同步）
 xhr.open(method,URL,async);
-//设置响应HTTP请求状态变化的函数
-xhr.onreadystatechange = function(){}
 //发送HTTP请求
 xhr.send(data)
 //获取异步调用返回的数据
@@ -424,11 +433,41 @@ xhr.responseXML;//获得 XML 形式的响应数据
 
 ##十六、js 同步和异步
 
-​             同步和异步关注的是消息通信机制。
+同步和异步关注的是消息通信机制。
 
-​                         同步的情况下，是由处理消息者自己去等待消息是否被触发；
+- 比如，同步的ajax：
 
-​                         异步的情况下，是由 触发机制 来通知处理消息者；
+顺序处理，当执行当前AJAX的时候会停止执行后面的JS代码，直到AJAX执行完毕后时，才能继续执行后面的JS代码。
+
+```javascript
+var xhr = new createXHR();
+xhr.open( "get", "example.php", false );
+xhr.send( null );
+if( xhr.status == 200 ){
+    alert( xhr.responseText );
+}
+```
+
+- 比如，异步的ajax：
+
+并行处理，当我们向服务器发出一个请求时，在服务器没返回结果之前，我们还是可以执行其他操作。
+
+```javascript
+var xhr = createXHR();
+xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 ){
+        if( ( xhr.status >= 200 && xhr.status < 300  ) || xhr.status == 304 ){
+            alert( xhr.responseText );
+        }else{
+            alert( "Request was unsuccessful:" + xhr.status );
+        }
+    }
+};
+xhr.open( "get", "example.php", true );
+xhr.send( null );
+```
+
+在异步时才可以用xmlHttpReq.onreadystatechange状态值！同步的情况下，js会等待请求返回，获取status。不需要onreadystatechange事件处理函数。而异步则需要onreadystatechange事件处理，且值为4再正确处理内容。
 
 ​            javascript语言是单线程机制。所谓单线程就是按次序执行，执行完一个任务再执行下一个。对于浏览器来说，也就是**无法在渲染页面的同时执行代码**。单线程机制的优点在于实现起来较为简单，运行环境相对简单。缺点在于，如果中间有任务需要响应时间过长，经常会导致页面加载错误或者浏览器无响应的状况。这就是所谓的“同步模式”，**程序执行顺序与任务排列顺序一致**。
 
@@ -457,6 +496,93 @@ xhr.responseXML;//获得 XML 形式的响应数据
 ​               3.原型对象除了一样拥有 `__proto__`外，也拥有独有的属性 constructor 。它的`__proto__`指向的都是Object.prototype ，除了 Object.prototype 本身，它自己是指向 null 。而 constructor 属性指向它们对应的构造函数对象。
 
 ​               4.原型链是基于 `__proto__`的。实例只能通过其对应原型对象的 constructor 才能访问到对应的构造函数对象。构造函数只能通过其对应的 prototype 来访问相应的原型对象。
+
+[具体解释](https://github.com/mqyqingfeng/Blog)
+
+## 十八、JSON
+
+​        JSON 是一个**轻量级的数据格式**，可以简化表示复杂数据结构的工作量，方便数据交换。 JSON 使用 JavaScript 语法的子集，有两种结构：**对象和数组**，用以表示表示对象、数组、字符串、数值、布尔值和 null。
+
+ ```javascript
+//JSON实例：
+var conference = {
+    "Conference": "Future Marketing",
+    "Date": "2017-6-1",
+    "Address": "Beijing",
+    "Members": 
+    [
+        {
+            "Name": "Bob",
+            "Age": 32,
+            "Company": "IBM",
+            "Engineer": true
+        },
+        {
+            "Name": "John",
+            "Age": 20,
+            "Company": "Oracle",
+            "Engineer": false
+        },
+        {
+            "Name": "Henry",
+            "Age": 45,
+            "Company": "Microsoft",
+            "Engineer": false
+        }
+    ]
+}
+ ```
+
+​        ECMAScript 5 定义了一个原生的 JSON 对象，可以用来将**对象序列化为 JSON字符串**或者将 **JSON数据解析为 JavaScript 对象**。 **JSON.stringify()**和 **JSON.parse()**方法分别用来实现上述两项功能。 
+
+
+
+## 十九、DOM元素e的e.getAttribute(propName)和e.propName有什么区别和联系
+
+- e.getAttribute()，是**标准DOM操作文档元素属性的方法**，具有通用性可在任意文档上使用，返回元素在源文件中**设置的属性**
+- e.propName通常是**在HTML文档中访问特定元素的特性**，浏览器解析元素后生成对应对象（如a标签生成HTMLAnchorElement），这些对象的特性会根据特定规则结合属性设置得到，对于没有对应特性的属性，只能使用getAttribute进行访问
+
+
+
+
+## 二十、离线web应用
+
+HTML5新增应用程序缓存，允许web应用将应用程序自身保存到用户浏览器中，用户离线状态也能访问。
+
+ 1.为html元素设置manifest属性:`<html manifest="myapp.appcache">`，其中后缀名只是一个约定，真正识别方式是通过`text/cache-manifest`作为MIME类型。所以需要配置服务器保证设置正确 2.manifest文件首行为`CACHE MANIFEST`，其余就是要缓存的URL列表，每个一行，相对路径都相对于manifest文件的url。注释以#开头 3.url分为三种类型：`CACHE`:为默认类型。`NETWORK`：表示资源从不缓存。 `FALLBACK`:每行包含两个url，第二个URL是指需要加载和存储在缓存中的资源， 第一个URL是一个前缀。任何匹配该前缀的URL都不会缓存，如果从网络中载入这样的URL失败的话，就会用第二个URL指定的缓存资源来替代。以下是一个文件例子：
+
+```html
+CACHE MANIFEST
+
+CACHE:
+myapp.html
+myapp.css
+myapp.js
+
+FALLBACK:
+videos/ offline_help.html
+
+NETWORK:
+cgi/
+```
+
+
+
+## 二十一、javascript跨域通信
+
+同源：两个文档同源需满足
+
+1. 协议相同
+2. 域名相同
+3. 端口相同
+
+跨域通信：js进行DOM操作、通信时如果目标与当前窗口不满足同源条件，浏览器为了安全会阻止跨域操作。跨域通信通常有以下方法
+
+- 如果是log之类的简单**单项通信**，新建`<img>`,`<script>`,`<link>`,`<iframe>`元素，通过src，href属性设置为目标url。实现跨域请求
+- 如果请求**json数据**，使用`<script>`进行jsonp请求
+- 现代浏览器中**多窗口通信**使用HTML5规范的targetWindow.postMessage(data, origin);其中data是需要发送的对象，origin是目标窗口的origin。window.addEventListener('message', handler, false);handler的event.data是postMessage发送来的数据，event.origin是发送窗口的origin，event.source是发送消息的窗口引用
+- **内部服务器代理**请求跨域url，然后返回数据
+- 跨域请求数据，现代浏览器可使用**HTML5规范的CORS功能**，只要目标服务器返回HTTP头部**`Access-Control-Allow-Origin: *`**即可像普通ajax一样访问跨域资源
 
 
 
